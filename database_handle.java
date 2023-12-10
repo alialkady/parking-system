@@ -6,6 +6,7 @@ public class database_handle {
     private static final String JDBC_URL = "jdbc:sqlserver://DESKTOP-FCEDQJG:1433;databaseName=parking_system;encrypt=false;trustServerCertificate=true";
     private static final String USER = "alialkady";
     private static final String PASSWORD = "Aa22540444";
+
     // insert methods
     public static void insertOperatorData(String name,String pass,int shift) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
@@ -24,14 +25,14 @@ public class database_handle {
         }
     }
 
-    public static void insertCustomerData(int entry_id,int plate_number,String transaction_date) {
+    public static void insertCustomerData(int entry_id,int plate_number) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             String insertQuery = "INSERT INTO operator (entry_id, plate_number,transaction_date) VALUES (?, ?,?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 preparedStatement.setInt(1,entry_id);
                 preparedStatement.setInt(2,plate_number);
-                preparedStatement.setString(3,transaction_date);
+                preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data inserted successfully.");
@@ -46,7 +47,7 @@ public class database_handle {
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 preparedStatement.setInt(1,spot);
-                preparedStatement.setInt(2,spot_free);
+                preparedStatement.setString(2,spot_free);
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data inserted successfully.");

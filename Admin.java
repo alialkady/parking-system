@@ -5,8 +5,8 @@ public class Admin {
         database_handle.insertOperatorData(name,pass,shift); // we need to modify into database handle file the parameters
 
     }
-    public void  add_customer(int entry_id,int plate_number,String transaction_date){
-        database_handle.insertCustomerData(entry_id,plate_number,transaction_date);
+    public void  add_customer(int entry_id,int plate_number){
+        database_handle.insertCustomerData(entry_id,plate_number);
     }
     public void addSpot(int spot, String spot_free){
         database_handle.insertSpot(spot,spot_free);
