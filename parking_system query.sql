@@ -20,10 +20,11 @@ create table spots(
 spot int unique, --add unique
 spot_free varchar(10)	
 )
-drop table spots
 Go
 create table payment(
-shifts_payment double
+shift_order int unique,
+shifts_payment decimal
 )
-
+drop table payment
+Go
 
