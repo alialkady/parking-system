@@ -77,7 +77,7 @@ public class Operator {
     } */
 
     public static void displayFreeSpots(){
-        //database_handle.retrieveData("spots");
+        database_handle.retrieveData("spots");
         /*
         database_handle database= new database_handle();
         void availableSlot = String.valueOf(database.retrieveData("spots"));
