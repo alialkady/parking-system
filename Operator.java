@@ -26,7 +26,8 @@ public class Operator {
         entryDateTime = LocalDateTime.now();
     }
     public String assignedSlot(){
-        availableSlot = database_handle.assignSlot(carPlateNumber);
+        database_handle database1 = new database_handle();
+        availableSlot = database1.assignSlot(carPlateNumber);
         return availableSlot;
     }
 
