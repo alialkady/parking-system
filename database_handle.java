@@ -13,7 +13,7 @@ public class database_handle {
         int availableSlot =0;
 
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            
+
             String query = "SELECT spot FROM spots WHERE spot_free = 'free'";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
 
@@ -136,28 +136,72 @@ public class database_handle {
             e.printStackTrace();
         }
     }
-    public static void updateData(int id, String newSkills) {
+    public static void updateCustomerId(int entry_id,int new_id) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String updateQuery = "UPDATE users SET Skills = ? WHERE id = ?";
+            String updateQuery = "UPDATE customers SET entry_id = ? WHERE entry_id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-                preparedStatement.setString(1, newSkills);
-                preparedStatement.setInt(2, id);
+                preparedStatement.setInt(1, new_id);
+                preparedStatement.setInt(2, entry_id);
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data updated successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data couldn't update successfully.");
+        }
+    }
+    public static void updateOperatorUser(String username,String newUser) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String updateQuery = "UPDATE operator SET username = ? WHERE username = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+                preparedStatement.setString(1, newUser);
+                preparedStatement.setString(2, username);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data updated successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Data couldn't update successfully.");
+        }
+    }
+    public static void updateOperatorpass(String password,String newPass) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String updateQuery = "UPDATE operator SET password = ? WHERE password = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+                preparedStatement.setString(1, newPass);
+                preparedStatement.setString(2, password);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data updated successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Data couldn't update successfully.");
         }
     }
 
-    public static void deleteData(int id) {
+    public static void deleteCustomerData(int id) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String deleteQuery = "DELETE FROM users WHERE id = ?";
+            String deleteQuery = "DELETE FROM customers WHERE entry_id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
                 preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data deleted successfully.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void deleteOperatorData(String username) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String deleteQuery = "DELETE FROM operator WHERE username = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+                preparedStatement.setString(1, username);
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data deleted successfully.");
