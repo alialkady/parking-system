@@ -116,7 +116,7 @@ public class menues(){
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    entryOperator.displayFreeSlots();
+                    Operator.displayFreeSpots();
                     break;
                 case 2:
                     entryOperator.displayPlateNumbers();
