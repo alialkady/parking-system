@@ -25,10 +25,9 @@ public class Operator {
     public void recordEntryTime() {
         entryDateTime = LocalDateTime.now();
     }
-    public String assignedSlot(){
-        database_handle database1 = new database_handle();
-        availableSlot = database1.assignSlot(carPlateNumber);
-        return availableSlot;
+
+    public void assignedSlot(String carPlateNumber){
+       database_handle.assignSlot(carPlateNumber);
     }
 
     public void printEntryTicket(String platenumber) {

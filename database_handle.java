@@ -1,3 +1,4 @@
+import java.net.SocketTimeoutException;
 import java.sql.*;
 import java.time.LocalDateTime;
 
@@ -8,25 +9,29 @@ public class database_handle {
     private static final String PASSWORD = "Aa22540444";
 
     //assigne slot by GAzar
-    public String assignSlot(String plateNumber) {
-        String availableSlot = null;
+    public static void assignSlot(String plateNumber) {
+        int availableSlot =0;
 
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String query = "SELECT spot_free FROM spots WHERE plate_number = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, plateNumber);
+            
+            String query = "SELECT spot FROM spots WHERE spot_free = 'free'";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
 
-            ResultSet resultSet = statement.executeQuery();
 
-            if (resultSet.next()) {
-                availableSlot = resultSet.getString("spot_free");
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    availableSlot = resultSet.getInt("spot");
+                }
+                System.out.print(availableSlot);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return availableSlot;
+
     }
+
 
 
     // insert methods
@@ -49,7 +54,7 @@ public class database_handle {
 
     public static void insertCustomerData(int entry_id,int plate_number) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String insertQuery = "INSERT INTO operator (entry_id, plate_number,transaction_date) VALUES (?, ?,?)";
+            String insertQuery = "INSERT INTO customers (entry_id, plate_number,transaction_date) VALUES (?, ?,?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 preparedStatement.setInt(1,entry_id);
