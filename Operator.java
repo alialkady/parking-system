@@ -76,9 +76,14 @@ public class Operator {
         return "Entry ID: "+entryID+", Entry DateTime: "+entryDateTime+"\nAvailable Slot: "+availableSlot+"\nPLate number: "+carPlateNumber; 
     } */
 
-    public String displayFreeSpots(){
-    database_handle.retrieveData("spots");
-    
+    public static void displayFreeSpots(){
+        //database_handle.retrieveData("spots");
+        /*
+        database_handle database= new database_handle();
+        void availableSlot = String.valueOf(database.retrieveData("spots"));
+        System.out.println("Availble Spots: " +availableSlot);
+
+         */
     }
 
 
