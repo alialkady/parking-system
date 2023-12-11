@@ -7,6 +7,28 @@ public class database_handle {
     private static final String USER = "alialkady";
     private static final String PASSWORD = "Aa22540444";
 
+    //assigne slot by GAzar
+    public String assignSlot(String plateNumber) {
+        String availableSlot = null;
+
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String query = "SELECT spot_free FROM spots WHERE plate_number = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, plateNumber);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                availableSlot = resultSet.getString("spot_free");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return availableSlot;
+    }
+
+
     // insert methods
     public static void insertOperatorData(String name,String pass,int shift) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {

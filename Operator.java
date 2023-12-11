@@ -25,6 +25,10 @@ public class Operator {
     public void recordEntryTime() {
         entryDateTime = LocalDateTime.now();
     }
+    public String assignedSlot(){
+        availableSlot = database_handle.assignSlot(carPlateNumber);
+        return availableSlot;
+    }
 
     public void printEntryTicket(String platenumber) {
         this.carPlateNumber= platenumber;
@@ -71,10 +75,9 @@ public class Operator {
         return "Entry ID: "+entryID+", Entry DateTime: "+entryDateTime+"\nAvailable Slot: "+availableSlot+"\nPLate number: "+carPlateNumber; 
     } */
 
-    public static void displayFreeSpots(){
-        database_handle database= new database_handle();
-        void availableSlot = String.valueOf(database.retrieveData("spots"));
-        System.out.println("Availble Spots: " +availableSlot);
+    public String displayFreeSpots(){
+    database_handle.retrieveData("spots");
+    
     }
 
 
