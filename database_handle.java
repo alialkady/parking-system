@@ -48,29 +48,29 @@ public class database_handle {
                 System.out.println("Data inserted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data couldn't be inserted.");
         }
     }
 
-    public static void insertCustomerData(int entry_id,int plate_number) {
+    public static void insertCustomerData(int entry_id,String plate_number) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             String insertQuery = "INSERT INTO customers (entry_id, plate_number,transaction_date) VALUES (?, ?,?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 preparedStatement.setInt(1,entry_id);
-                preparedStatement.setInt(2,plate_number);
+                preparedStatement.setString(2,plate_number);
                 preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data inserted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data couldn't be inserted.");
         }
     }
     public static void insertSpot(int spot, String spot_free) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String insertQuery = "INSERT INTO operator (spot, spot_free) VALUES (?, ?)";
+            String insertQuery = "INSERT INTO spots (spot, spot_free) VALUES (?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 preparedStatement.setInt(1,spot);
@@ -80,22 +80,22 @@ public class database_handle {
                 System.out.println("Data inserted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data can't be inserted");
         }
     }
-    public static void insertPayment(double shiftPayment) {
+    public static void insertPayment(int shiftPayment,double payment) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String insertQuery = "INSERT INTO operator (shifts_payment) VALUES (?)";
+            String insertQuery = "INSERT INTO payment (shift_order,shifts_payment) VALUES (?,?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
-                preparedStatement.setDouble(1,shiftPayment);
-
+                preparedStatement.setInt(1,shiftPayment);
+                preparedStatement.setDouble(2,payment);
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data inserted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data couldn't be inserted.");
         }
     }
 //retrieve method
@@ -182,6 +182,22 @@ public class database_handle {
         }
     }
 
+    public static void updatePayment(int shift,double payment) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String updateQuery = "UPDATE payment SET shifts_payment = ? WHERE shift_order = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+                preparedStatement.setDouble(1, payment);
+                preparedStatement.setInt(2, shift);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data updated successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Data couldn't update successfully.");
+        }
+    }
+
     public static void deleteCustomerData(int id) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             String deleteQuery = "DELETE FROM customers WHERE entry_id = ?";
@@ -207,7 +223,7 @@ public class database_handle {
                 System.out.println("Data deleted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data couldn't be deleted.");
         }
     }
 }
