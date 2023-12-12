@@ -64,7 +64,6 @@ public class menues{
                 operator.generateEntryID(plateNumber);
                 operator.assignedSlot(plateNumber);
                 operator.recordEntryTime();
-                
                 operator.printEntryTicket(plateNumber);
                 
                 //customer.setVehicleNumber(plateNumber);
