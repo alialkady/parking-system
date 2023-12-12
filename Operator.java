@@ -56,8 +56,6 @@ public class Operator {
         if (providedEntryID.equals(entryID)) {
             calculateParkingDurationHours();
             double parkingFee = calculateParkingFee();
-            System.out.println("Parking duration: " + calculateParkingDurationHours() + " hours");
-            System.out.println("Parking Fee: $" + parkingFee);
             // Simulate printing an exit ticket with duration and fee details
             System.out.println("==== Exit Ticket ====");
             System.out.println("Entry ID: " + entryID);
