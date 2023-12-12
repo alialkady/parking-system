@@ -122,7 +122,7 @@ public class database_handle {
                     else if(table=="spots"){
                         int spots =resultSet.getInt("spot");
                         String spot_free =resultSet.getString("spot_free");
-                        System.out.println("spot number: "+spots+"is "+ spot_free);
+                        System.out.println("spot number: "+spots+" is "+ spot_free);
                     }
                     else if(table =="payment"){
                         double shift_payment = resultSet.getDouble("shift_payment");
@@ -163,10 +163,10 @@ public class database_handle {
                 System.out.println("Data updated successfully.");
             }
         } catch (SQLException e) {
-            System.out.println("Data couldn't update successfully.");
+            System.out.println("Data couldn't be updated.");
         }
     }
-    public static void updateOperatorpass(String password,String newPass) {
+    public static void updateOperatorPass(String password,String newPass) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             String updateQuery = "UPDATE operator SET password = ? WHERE password = ?";
 
@@ -178,7 +178,7 @@ public class database_handle {
                 System.out.println("Data updated successfully.");
             }
         } catch (SQLException e) {
-            System.out.println("Data couldn't update successfully.");
+            System.out.println("Data couldn't be updated.");
         }
     }
 
@@ -194,7 +194,7 @@ public class database_handle {
                 System.out.println("Data updated successfully.");
             }
         } catch (SQLException e) {
-            System.out.println("Data couldn't update successfully.");
+            System.out.println("Data couldn't be updated.");
         }
     }
 
