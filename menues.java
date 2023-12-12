@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.*;
 
 public class menues(){
 
@@ -44,13 +45,12 @@ public class menues(){
     }
     public static void customerMenu() {
         Scanner scanner = new Scanner(System.in);
-        Customer customer = new Customer("");
+        //Customer customer = new Customer("");
     
         System.out.println("Customer Menu");
         System.out.println("1. Print Entry Ticket");
         System.out.println("2. Print Exit Ticket");
         System.out.println("3. Back");
-    
         System.out.print("Choose an option: ");
         int choice = scanner.nextInt();
         scanner.nextLine(); // Consume newline
@@ -59,13 +59,13 @@ public class menues(){
             case 1:
                 System.out.print("Enter vehicle plate number: ");
                 String plateNumber = scanner.nextLine();
-                customer.setVehicleNumber(plateNumber);
-                customer.park(1);
+                //customer.setVehicleNumber(plateNumber);
+                //customer.park(1);
                 break;
             case 2:
                 System.out.print("Enter entry ID: ");
                 String providedEntryID = scanner.nextLine();
-                customer.printExitTicket(providedEntryID);
+                //customer.printExitTicket(providedEntryID);
                 break;
             case 3:
                 break;
@@ -75,7 +75,7 @@ public class menues(){
         }
     }
     public static void entryStationOperatorMenu() {
-        EntryStationOperator entryOperator = new EntryStationOperator(parkingLot);
+        Operator entryOperator = new Operator();
         Scanner scanner = new Scanner(System.in);
         boolean backToMain = false;
 
@@ -102,7 +102,7 @@ public class menues(){
         }
     }
 
-    public static void operatorActions(EntryStationOperator entryOperator) {
+    public static void operatorActions(Operator entryOperator) {
         Scanner scanner = new Scanner(System.in);
         boolean backToLogin = false;
 
@@ -119,7 +119,7 @@ public class menues(){
                     Operator.displayFreeSpots();
                     break;
                 case 2:
-                    entryOperator.displayPlateNumbers();
+                    Operator.displayFreeSpots();
                     break;
                 case 3:
                     backToLogin = true;
@@ -182,6 +182,4 @@ public class menues(){
             }
         }
     }
-
-
 }
