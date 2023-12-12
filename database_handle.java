@@ -1,3 +1,4 @@
+import java.net.SocketTimeoutException;
 import java.sql.*;
 import java.time.LocalDateTime;
 
@@ -8,25 +9,29 @@ public class database_handle {
     private static final String PASSWORD = "Aa22540444";
 
     //assigne slot by GAzar
-    public String assignSlot(String plateNumber) {
-        String availableSlot = null;
+    public static void assignSlot(String plateNumber) {
+        int availableSlot =0;
 
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String query = "SELECT spot_free FROM spots WHERE plate_number = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, plateNumber);
 
-            ResultSet resultSet = statement.executeQuery();
+            String query = "SELECT spot FROM spots WHERE spot_free = 'free'";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
 
-            if (resultSet.next()) {
-                availableSlot = resultSet.getString("spot_free");
+
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    availableSlot = resultSet.getInt("spot");
+                }
+                System.out.print(availableSlot);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return availableSlot;
+
     }
+
 
 
     // insert methods
@@ -43,29 +48,29 @@ public class database_handle {
                 System.out.println("Data inserted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data couldn't be inserted.");
         }
     }
 
-    public static void insertCustomerData(int entry_id,int plate_number) {
+    public static void insertCustomerData(int entry_id,String plate_number) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String insertQuery = "INSERT INTO operator (entry_id, plate_number,transaction_date) VALUES (?, ?,?)";
+            String insertQuery = "INSERT INTO customers (entry_id, plate_number,transaction_date) VALUES (?, ?,?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 preparedStatement.setInt(1,entry_id);
-                preparedStatement.setInt(2,plate_number);
+                preparedStatement.setString(2,plate_number);
                 preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data inserted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data couldn't be inserted.");
         }
     }
     public static void insertSpot(int spot, String spot_free) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String insertQuery = "INSERT INTO operator (spot, spot_free) VALUES (?, ?)";
+            String insertQuery = "INSERT INTO spots (spot, spot_free) VALUES (?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 preparedStatement.setInt(1,spot);
@@ -75,22 +80,22 @@ public class database_handle {
                 System.out.println("Data inserted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data can't be inserted");
         }
     }
-    public static void insertPayment(double shiftPayment) {
+    public static void insertPayment(int shiftPayment,double payment) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String insertQuery = "INSERT INTO operator (shifts_payment) VALUES (?)";
+            String insertQuery = "INSERT INTO payment (shift_order,shifts_payment) VALUES (?,?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
-                preparedStatement.setDouble(1,shiftPayment);
-
+                preparedStatement.setInt(1,shiftPayment);
+                preparedStatement.setDouble(2,payment);
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data inserted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data couldn't be inserted.");
         }
     }
 //retrieve method
@@ -117,7 +122,7 @@ public class database_handle {
                     else if(table=="spots"){
                         int spots =resultSet.getInt("spot");
                         String spot_free =resultSet.getString("spot_free");
-                        System.out.println("spot number: "+spots+"is "+ spot_free);
+                        System.out.println("spot number: "+spots+" is "+ spot_free);
                     }
                     else if(table =="payment"){
                         double shift_payment = resultSet.getDouble("shift_payment");
@@ -131,25 +136,71 @@ public class database_handle {
             e.printStackTrace();
         }
     }
-    public static void updateData(int id, String newSkills) {
+    public static void updateCustomerId(int entry_id,int new_id) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String updateQuery = "UPDATE users SET Skills = ? WHERE id = ?";
+            String updateQuery = "UPDATE customers SET entry_id = ? WHERE entry_id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-                preparedStatement.setString(1, newSkills);
-                preparedStatement.setInt(2, id);
+                preparedStatement.setInt(1, new_id);
+                preparedStatement.setInt(2, entry_id);
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data updated successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Data couldn't update successfully.");
+        }
+    }
+    public static void updateOperatorUser(String username,String newUser) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String updateQuery = "UPDATE operator SET username = ? WHERE username = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+                preparedStatement.setString(1, newUser);
+                preparedStatement.setString(2, username);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data updated successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Data couldn't be updated.");
+        }
+    }
+    public static void updateOperatorPass(String password,String newPass) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String updateQuery = "UPDATE operator SET password = ? WHERE password = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+                preparedStatement.setString(1, newPass);
+                preparedStatement.setString(2, password);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data updated successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Data couldn't be updated.");
         }
     }
 
-    public static void deleteData(int id) {
+    public static void updatePayment(int shift,double payment) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String deleteQuery = "DELETE FROM users WHERE id = ?";
+            String updateQuery = "UPDATE payment SET shifts_payment = ? WHERE shift_order = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+                preparedStatement.setDouble(1, payment);
+                preparedStatement.setInt(2, shift);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data updated successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Data couldn't be updated.");
+        }
+    }
+
+    public static void deleteCustomerData(int id) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String deleteQuery = "DELETE FROM customers WHERE entry_id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
                 preparedStatement.setInt(1, id);
@@ -159,6 +210,20 @@ public class database_handle {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    public static void deleteOperatorData(String username) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String deleteQuery = "DELETE FROM operator WHERE username = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+                preparedStatement.setString(1, username);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data deleted successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Data couldn't be deleted.");
         }
     }
 }
