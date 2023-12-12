@@ -15,11 +15,12 @@ public class Operator {
     private double parkingFeePerHour = 2.5; // Assuming a fixed fee per hour
 
 
-    public void generateEntryID() {
+    public void generateEntryID(String plateNumber) {
         // ID generation logic as before
         //entryID = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + (int) (Math.random() * 1000);
-        //entryID = String.valueOf((int) (Math.random() * 100000));
-        entryID = carPlateNumber;
+        entryID = String.valueOf((int) (Math.random() * 100000));
+        this.carPlateNumber=plateNumber;
+        //entryID = carPlateNumber;
     }
 
     public void recordEntryTime() {

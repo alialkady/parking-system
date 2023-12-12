@@ -1,7 +1,8 @@
 import java.util.Scanner;
 import java.util.*;
 
-public class menues(){
+
+public class menues{
 
     public static void homeMenue(){
         Scanner scanner = new Scanner(System.in);
@@ -53,18 +54,26 @@ public class menues(){
         System.out.println("3. Back");
         System.out.print("Choose an option: ");
         int choice = scanner.nextInt();
+        
         scanner.nextLine(); // Consume newline
-    
+        Operator operator=new Operator();
         switch (choice) {
             case 1:
                 System.out.print("Enter vehicle plate number: ");
                 String plateNumber = scanner.nextLine();
+                operator.generateEntryID(plateNumber);
+                operator.assignedSlot(plateNumber);
+                operator.recordEntryTime();
+                
+                operator.printEntryTicket(plateNumber);
+                
                 //customer.setVehicleNumber(plateNumber);
                 //customer.park(1);
                 break;
             case 2:
                 System.out.print("Enter entry ID: ");
                 String providedEntryID = scanner.nextLine();
+                operator.printExitTicket(providedEntryID);
                 //customer.printExitTicket(providedEntryID);
                 break;
             case 3:
@@ -164,14 +173,15 @@ public class menues(){
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
+                Admin admin=new Admin();
             switch (choice) {
                 case 1:
                     System.out.print("Enter the number of new slots to add: ");
                     int newSlots = scanner.nextInt();
-                    admin.addSlots(newSlots);
+                    admin.addSpots(newSlots);
                     break;
                 case 2:
-                    admin.viewTotalSlots();
+                    admin.viewTotalSpots();
                     break;
                 case 3:
                     backToMain = true;

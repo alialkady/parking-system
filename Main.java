@@ -4,5 +4,8 @@ public class Main {
         Operator freeSpots=new Operator();
         //String slot= freeSpots.displayFreeSpots();
         //System.out.println("Number of Free Spots: "+ slot);
+        System.out.print("\n\tWelcome to the Parking Lot!\n");
+        menues test=new menues();
+        test.homeMenue();
     }
 }
