@@ -64,45 +64,55 @@ public class Admin {
     }
 
     //Admin add spots to the parking area
-    public void addSpots(int spotId){
+    public String addSpots(int spotId){
         database_handle.insertSpot(spotId, "free");
+        return "spot added successfully";
     }
 
     //Admin view total spots in the parking area
     public void viewTotalSpots(){
         database_handle.retrieveData("spots");
+
     }
 
     // Admin add customer
-    public void addCustomer(int entry_id,String plate_number){
+    public String addCustomer(String entry_id,String plate_number){
         database_handle.insertCustomerData(entry_id,plate_number);
+        return "added successfully";
     }
     //admin add operator
-    public void addOperator(String name, String pass,int shift){
+    public String addOperator(String name, String pass,int shift){
         database_handle.insertOperatorData(name,pass,shift);
+        return "added successfully";
     }
     //admin update user_id
-    public void updateUser(int id,int newID){
+    public String updateUser(int id,int newID){
         database_handle.updateCustomerId(id,newID);
+        return "Updated successfully";
     }
     //admin update operator_name
-    public void updateOperatorName(String oldName,String newName){
+    public String updateOperatorName(String oldName,String newName){
         database_handle.updateOperatorUser(oldName,newName);
+        return "Updated successfully";
     }
     //admin update operator_password
-    public void updateOperatorPass(String oldPass,String newPass){
+    public String updateOperatorPass(String oldPass,String newPass){
         database_handle.updateOperatorPass(oldPass,newPass);
+        return "Updated successfully";
     }
     //admin update shiftPayment
-    public void updatePayment(int shift, double payment){
+    public String updatePayment(int shift, double payment){
         database_handle.updatePayment(shift,payment);
+        return "Updated successfully" ;
     }
     //admin delete customerData
-    public void deleteCustomer(int entry_id){
+    public String deleteCustomer(int entry_id){
         database_handle.deleteCustomerData(entry_id);
+        return "Deleted successfully";
     }
     //admin delete OperatorData
-    public void deleteOperator(String name){
+    public String deleteOperator(String name){
         database_handle.deleteOperatorData(name);
+        return "deleted successfully";
     }
 }
