@@ -1,37 +1,61 @@
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.time.Duration;
+import java.util.List;
 
+import java.text.SimpleDateFormat;
+
+abstract class operatorMethods{
+    public abstract String generateEntryID(String plateNumber);
+    public abstract int assignedSlot(String carPlateNumber);
+    public abstract int freeSpot(String id);
+    public abstract double calculateParkingDurationHours(String id);
+    public abstract double calculateParkingFee(String id);
+    public abstract String entryTicket(String plateNumber);
+
+
+        }
 
 /**
  * Operator
  */
-public class Operator {
+public class Operator extends operatorMethods {
 
     private String entryID;
     private LocalDateTime entryDateTime;
     private String availableSlot;
-    private String carPlateNumber;
+    private  String carPlateNumber;
     private double parkingFeePerHour = 2.5; // Assuming a fixed fee per hour
 
 
-    public void generateEntryID(String plateNumber) {
-        // ID generation logic as before
-        //entryID = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + (int) (Math.random() * 1000);
-        entryID = String.valueOf((int) (Math.random() * 100000));
-        this.carPlateNumber=plateNumber;
-        //entryID = carPlateNumber;
+    public String generateEntryID(String plateNumber) {
+
+        entryID = String.valueOf((int) (Math.random() * 100001));
+        this.carPlateNumber = plateNumber;
+
+        return database_handle.insertCustomerData(entryID, carPlateNumber);
     }
 
-    public void recordEntryTime() {
-        entryDateTime = LocalDateTime.now();
+    public int assignedSlot(String carPlateNumber){
+        this.carPlateNumber = carPlateNumber;
+      int slot =  database_handle.assignSlot(entryID);
+      database_handle.assignSlotToCustomer(slot,entryID);
+
+      // file.writeFile("slot",slot);
+        return slot;
     }
 
-    public void assignedSlot(String carPlateNumber){
-       database_handle.assignSlot(carPlateNumber);
+
+    public  int freeSpot(String id){
+        database_handle.freeSpot(id);
+        return 1;
     }
 
-    public void printEntryTicket(String platenumber) {
+
+
+    /*public String printEntryTicket(String platenumber) {
         this.carPlateNumber= platenumber;
         System.out.println("==== Entry Ticket ====");
         System.out.println("Entry ID: " + entryID);
@@ -39,23 +63,34 @@ public class Operator {
         System.out.println("Entry Time: " + entryDateTime);
         System.out.println("Slot Number: "+ availableSlot);
         System.out.println("=====================");
-    }
+    }*/
 
-    public double calculateParkingDurationHours() {
+    public double calculateParkingDurationHours(String id) {
+        this.entryID=id;
+        entryDateTime = database_handle.getDate(id).toLocalDateTime();
         LocalDateTime exitTime = LocalDateTime.now();
         Duration duration = Duration.between(entryDateTime, exitTime);
-        return duration.getSeconds() / 3600.0;
+        database_handle.setExitDate(entryID, Timestamp.valueOf(exitTime));
+        return duration.getSeconds();
     }
 
-    public double calculateParkingFee() {
-        double hours = calculateParkingDurationHours();
-        return hours * parkingFeePerHour;
+    public double calculateParkingFee(String id) {
+        this.entryID=id;
+        double hours = calculateParkingDurationHours(entryID);
+        double fees = hours* parkingFeePerHour;
+        database_handle.setFees(entryID,fees);
+        return fees;
+
     }
 
+
+/*
     public void printExitTicket(String providedEntryID) {
-        if (providedEntryID.equals(entryID)) {
+        
+        if (providedEntryID==entryID) {
             calculateParkingDurationHours();
             double parkingFee = calculateParkingFee();
+
             // Simulate printing an exit ticket with duration and fee details
             System.out.println("==== Exit Ticket ====");
             System.out.println("Entry ID: " + entryID);
@@ -66,16 +101,42 @@ public class Operator {
         } else {
             System.out.println("Invalid Entry ID. Please provide the correct entry ID.");
         }
+       // database_handle.printEntryTicket(providedEntryID);
     }
+*/
 
-
-/*     public String entryTicket(String plateNumber){
+     public String entryTicket(String plateNumber){
         this.carPlateNumber = plateNumber;
-        return "Entry ID: "+entryID+", Entry DateTime: "+entryDateTime+"\nAvailable Slot: "+availableSlot+"\nPLate number: "+carPlateNumber; 
-    } */
+        return database_handle.setEntryTicket(entryID);
+    } 
 
-    public static void displayFreeSpots(){
-        database_handle.retrieveData("spots");
+   public static String printExitTicket(String providedEntryID){
+
+        return database_handle.getCustomerData(providedEntryID);
+        /*if (providedEntryID==entryID) {
+            calculateParkingDurationHours(providedEntryID);
+            double parkingFee = (double)calculateParkingFee(providedEntryID);
+            String output = "{\n\"Entry ID\": \""+entryID+"\",\n\"Car Plate Number\": \""+carPlateNumber+"\",\n\"Duration Hours\": \"" + calculateParkingDurationHours(entryID)+ "\",\n\"Parking Fee\": \"$" + parkingFee + "\"}";
+            //database_handle.updateStatus(entryID,"Exited");
+            //database_handle.setPaymentStatus(entryID,"Unpaid");
+            return output;
+            } else {
+                return "Invalid Entry ID.";
+                }
+                //return database_handle.printExitTicket(providedEntryID);*/
+                }
+
+public static String displaySpots(){
+       return database_handle.retrieveData("spots");
+        /*
+        database_handle database= new database_handle();
+        void availableSlot = String.valueOf(database.retrieveData("spots"));
+        System.out.println("Availble Spots: " +availableSlot);
+
+         */
+    }
+    public static List<Integer> freeSpots(){
+        return database_handle.getFreeSpots();
         /*
         database_handle database= new database_handle();
         void availableSlot = String.valueOf(database.retrieveData("spots"));
@@ -86,5 +147,5 @@ public class Operator {
 
 
 
-  
+
 }

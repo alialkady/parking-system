@@ -1,10 +1,30 @@
 import java.util.*;
+abstract class AdminMethods{
+    public abstract void setUsernameAndPass();
+    //public abstract void setPassword(String password);
+    public abstract String getUsername();
+    public abstract String getPassword();
+    public abstract String addSpots(int spotId);
+    public abstract String viewTotalSpots();
+    public abstract String addCustomer(String entry_id,String plate_number);
+    public abstract String addOperator(String name, String pass,int shift);
+    public abstract String updateUser(String id,String newID);
+    public abstract String updateOperatorName(String oldName,String newName);
+    public abstract String updateOperatorPass(String oldPass,String newPass);
 
-public class Admin {
+    public abstract String deleteCustomer(String entry_id);
+    public abstract String deleteOperator(String name);
+    public abstract String parkedCar();
+    public abstract String carReports();
+
+
+}
+public class Admin extends AdminMethods {
+
     private String Username;
     private String Password;
     //Constructor for logging into the system
-    public Admin(){
+    /*public Admin(){
         // creating two strings to hold the entered login info
         String user ="";
         String pass ="";
@@ -16,6 +36,8 @@ public class Admin {
         pass += adminCheckScan.nextLine();
         //passing login info to the login check method
         file.adminCheck("Admin", user, pass);
+    }*/
+    public Admin(){
     }
 
     // Constructor for add or signing up a new admin to the system
@@ -25,11 +47,13 @@ public class Admin {
         // Add new admin's info to the admins file
         file.appendFile("Admin", Username);
         file.appendFile("Admin", Password);
+
     }
 
     // Admin username setter
-    public void setUsername(String user) {
-        Username = user;
+    public void setUsernameAndPass(/*String user, String password*/) {
+        //Username = user;
+        //Password = password;
         Scanner userInputScanner = new Scanner(System.in);
         //Scan login info to edit them
         System.out.print("Enter the old username: ");
@@ -41,17 +65,17 @@ public class Admin {
     }
 
     // Admin password setter
-    public void setPassword(String password) {
+    /*public void setPassword(String password) {
         Password = password;
         Scanner userInputScanner = new Scanner(System.in);
         //Scan login info to edit them
-        System.out.print("Enter the old username: ");
+        System.out.print("Enter the current username: ");
         String oldUsername = userInputScanner.nextLine();
-        System.out.print("Enter the old password: ");
+        System.out.print("Enter the current password: ");
         String oldPassword = userInputScanner.nextLine();
         //passing login info to the edit file method
         file.editFile("Admin", oldUsername, oldPassword);
-    }
+    }*/
 
     // Admin username getter
     public String getUsername() {
@@ -59,60 +83,64 @@ public class Admin {
     }
 
     // Admin password getter
-    private String getPassword() {
+    public String getPassword() {
         return Password;
     }
 
     //Admin add spots to the parking area
     public String addSpots(int spotId){
-        database_handle.insertSpot(spotId, "free");
-        return "spot added successfully";
+
+        return database_handle.insertSpot(spotId, "free");
     }
 
     //Admin view total spots in the parking area
-    public void viewTotalSpots(){
-        database_handle.retrieveData("spots");
+    public String viewTotalSpots(){
+        return database_handle.retrieveData("spots");
 
     }
 
     // Admin add customer
     public String addCustomer(String entry_id,String plate_number){
-        database_handle.insertCustomerData(entry_id,plate_number);
-        return "added successfully";
+        return database_handle.insertCustomerData(entry_id,plate_number);
+
     }
     //admin add operator
     public String addOperator(String name, String pass,int shift){
-        database_handle.insertOperatorData(name,pass,shift);
-        return "added successfully";
+        return database_handle.insertOperatorData(name,pass,shift);
+
     }
     //admin update user_id
-    public String updateUser(int id,int newID){
-        database_handle.updateCustomerId(id,newID);
-        return "Updated successfully";
+    public String updateUser(String  id,String newID){
+        return database_handle.updateCustomerId(id,newID);
+
     }
     //admin update operator_name
     public String updateOperatorName(String oldName,String newName){
-        database_handle.updateOperatorUser(oldName,newName);
-        return "Updated successfully";
+        return database_handle.updateOperatorUser(oldName,newName);
+
     }
     //admin update operator_password
     public String updateOperatorPass(String oldPass,String newPass){
-        database_handle.updateOperatorPass(oldPass,newPass);
-        return "Updated successfully";
+        return database_handle.updateOperatorPass(oldPass,newPass);
+
     }
-    //admin update shiftPayment
-    public String updatePayment(int shift, double payment){
-        database_handle.updatePayment(shift,payment);
-        return "Updated successfully" ;
-    }
+
     //admin delete customerData
-    public String deleteCustomer(int entry_id){
-        database_handle.deleteCustomerData(entry_id);
-        return "Deleted successfully";
+    public String deleteCustomer(String entry_id){
+        return database_handle.deleteCustomerData(entry_id);
+
     }
     //admin delete OperatorData
     public String deleteOperator(String name){
-        database_handle.deleteOperatorData(name);
-        return "deleted successfully";
+        return database_handle.deleteOperatorData(name);
+
     }
+    public String parkedCar(){
+        return database_handle.retrieveData("customers");
+    }
+
+    public String carReports(){
+        return database_handle.retrieveData("payment");
+    }
+
 }
