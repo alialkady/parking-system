@@ -340,7 +340,7 @@ public class database_handle {
 
                     return "entry_id: " + ID + "\n PlateNumber " + plate_number + "\n transactionDate: " + transaction_date + "\nSlot: " + slot + "\n exitDate: " + exitTransactionDate + "\n Payment: " + payment;
                 } else {
-
+                    freeSpot(id);
                     return "No data found for entry_id: " + id;
                 }
             }
@@ -436,7 +436,53 @@ public class database_handle {
             return -1;
         }
     }
-}
+    public static int fullSpots() {
+
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String selectQuery = "SELECT spot FROM spots WHERE spot_free = 'free'";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                // Check if any rows are returned
+                if (resultSet.next()) {
+                    // Rows are affected (spots are free)
+                    return 0;
+                } else {
+                    // No rows affected (no free spots)
+                    return 1;
+                }
+            }
+
+        } catch (SQLException e) {
+
+            return 3;
+        }
+
+    }
+    public static int cancelSlot(String id) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String selectQuery = "SELECT entry_id FROM customers WHERE entry_id =?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+                preparedStatement.setString(1, id);
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    return 0;  // Return 0 if there is a row affected
+                } else {
+                    return 1;  // Return 1 if there is no row affected
+                }
+            }
+        } catch (SQLException e) {
+            return -1;  // Return -1 for any SQL exception
+        }
+    }
+
+    }
+
+
 
 
 

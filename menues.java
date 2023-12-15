@@ -52,16 +52,19 @@ public class menues{
 
         scanner.nextLine(); // Consume newline
         Operator operator=new Operator();
+        Customer customer = new Customer();
         switch (choice) {
             case 1:
                 System.out.print("Enter vehicle plate number: ");
                 String plateNumber = scanner.nextLine();
+                System.out.println(customer.CallingOperator(plateNumber));
 
-
-
+/*
               operator.generateEntryID(plateNumber);
               operator.assignedSlot(plateNumber);
                 System.out.println(operator.entryTicket(plateNumber));
+
+ */
 
 
                 //operator.recordEntryTime();

@@ -1,3 +1,5 @@
+import jdk.jfr.consumer.RecordedThread;
+
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -32,13 +34,24 @@ public class Operator extends operatorMethods {
 
     public String generateEntryID(String plateNumber) {
 
-        entryID = String.valueOf((int) (Math.random() * 100001));
-        this.carPlateNumber = plateNumber;
+        if(database_handle.fullSpots()==1){
+            return "no freeSpots";
+        }
 
-        return database_handle.insertCustomerData(entryID, carPlateNumber);
+            entryID = String.valueOf((int) (Math.random() * 100001));
+            this.carPlateNumber = plateNumber;
+
+            return database_handle.insertCustomerData(entryID, carPlateNumber);
+
     }
 
     public int assignedSlot(String carPlateNumber){
+        if(database_handle.fullSpots()==1){
+            return 0;
+        }
+        if(database_handle.cancelSlot(entryID)==1){
+            return 0;
+        }
         this.carPlateNumber = carPlateNumber;
       int slot =  database_handle.assignSlot(entryID);
       database_handle.assignSlotToCustomer(slot,entryID);
@@ -106,7 +119,11 @@ public class Operator extends operatorMethods {
 */
 
      public String entryTicket(String plateNumber){
+         if(database_handle.fullSpots()==1){
+             return "no freeSpots";
+         }
         this.carPlateNumber = plateNumber;
+
         return database_handle.setEntryTicket(entryID);
     } 
 
